@@ -1,7 +1,7 @@
 # Simple-Nintendo-Switch-Homebrew-Java-Updater
 A simple program made in Java to download most important nintendo switch homebrew apps.
 # How to use
-Just execute the .jar provided and it will list the apps directly from github releases, you can download everything or select some apps from the table to only download those.
+Just execute the .jar provided and it will list the apps directly from github releases, you can download everything or select some apps from the table to only download those. All files will be downloaded to /Downloads/NxAppDownloader/
 # How to add new apps
 You can add them directly in Logic.AppsManagement with NxApp Constructor, only the repo's name and url is needed, since it checks the rest of the info from github
 # Required Dependencies
