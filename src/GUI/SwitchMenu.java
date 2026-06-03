@@ -31,7 +31,7 @@ public class SwitchMenu extends javax.swing.JFrame {
         initComponents();
         // welcomeMessage();
         setLocationRelativeTo(null);
-        setTitle("Nintendo Homebrew Java Updater v1.0.4");
+        setTitle("Nintendo Homebrew Java Updater v1.0.5");
         configureTable();
         try {
             gitHubService = new GitHubService();
@@ -143,8 +143,8 @@ public class SwitchMenu extends javax.swing.JFrame {
             reloadButton.setEnabled(false);
         }
 
-        jButton2.setEnabled(false);
-        jButton4.setEnabled(false);
+        switchButton.setEnabled(false);
+        n3dsButton.setEnabled(false);
         Wii.setEnabled(false);
         WiiU.setEnabled(false);
 
@@ -202,8 +202,8 @@ public class SwitchMenu extends javax.swing.JFrame {
             if (reloadButton != null) {
                 reloadButton.setEnabled(true);
             }
-            jButton2.setEnabled(true);
-            jButton4.setEnabled(true);
+            switchButton.setEnabled(true);
+            n3dsButton.setEnabled(true);
             Wii.setEnabled(true);
             WiiU.setEnabled(true);
 
@@ -233,8 +233,8 @@ public class SwitchMenu extends javax.swing.JFrame {
         downloadAll = new javax.swing.JButton();
         progressBar = new javax.swing.JProgressBar();
         lblStatus = new javax.swing.JLabel();
-        jButton2 = new javax.swing.JButton();
-        jButton4 = new javax.swing.JButton();
+        switchButton = new javax.swing.JButton();
+        n3dsButton = new javax.swing.JButton();
         Wii = new javax.swing.JButton();
         WiiU = new javax.swing.JButton();
         reloadButton = new javax.swing.JButton();
@@ -270,17 +270,17 @@ public class SwitchMenu extends javax.swing.JFrame {
 
         lblStatus.setText("Actual Status");
 
-        jButton2.setText("Nintendo Switch");
-        jButton2.addActionListener(new java.awt.event.ActionListener() {
+        switchButton.setText("Nintendo Switch");
+        switchButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton2ActionPerformed(evt);
+                switchButtonActionPerformed(evt);
             }
         });
 
-        jButton4.setText("Nintendo 3DS");
-        jButton4.addActionListener(new java.awt.event.ActionListener() {
+        n3dsButton.setText("Nintendo 3DS");
+        n3dsButton.addActionListener(new java.awt.event.ActionListener() {
             public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jButton4ActionPerformed(evt);
+                n3dsButtonActionPerformed(evt);
             }
         });
 
@@ -317,9 +317,9 @@ public class SwitchMenu extends javax.swing.JFrame {
                 .addGap(61, 61, 61)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                     .addGroup(layout.createSequentialGroup()
-                        .addComponent(jButton2)
+                        .addComponent(switchButton)
                         .addGap(24, 24, 24)
-                        .addComponent(jButton4))
+                        .addComponent(n3dsButton))
                     .addComponent(downloadAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
@@ -346,9 +346,9 @@ public class SwitchMenu extends javax.swing.JFrame {
             .addGroup(layout.createSequentialGroup()
                 .addGap(67, 67, 67)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(jButton4)
+                    .addComponent(n3dsButton)
                     .addComponent(Wii)
-                    .addComponent(jButton2)
+                    .addComponent(switchButton)
                     .addComponent(WiiU)
                     .addComponent(reloadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 431, Short.MAX_VALUE)
@@ -373,6 +373,10 @@ public class SwitchMenu extends javax.swing.JFrame {
     private void downloadAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadAllActionPerformed
         downloadAll.setEnabled(false);
         jButton1.setEnabled(false);
+        switchButton.setEnabled(false);
+        n3dsButton.setEnabled(false);
+        Wii.setEnabled(false);
+        WiiU.setEnabled(false);
         downloadAll.setText("Downloading...");
         lblStatus.setText("Please wait until all files are processed...");
         progressBar.setIndeterminate(true);
@@ -514,6 +518,10 @@ public class SwitchMenu extends javax.swing.JFrame {
 
             downloadAll.setEnabled(false);
             jButton1.setEnabled(false);
+            switchButton.setEnabled(false);
+            n3dsButton.setEnabled(false);
+            Wii.setEnabled(false);
+            WiiU.setEnabled(false);
             jButton1.setText("Downloading selected...");
             lblStatus.setText("Please wait until all files are processed...");
             progressBar.setIndeterminate(true);
@@ -554,18 +562,18 @@ public class SwitchMenu extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_jButton1ActionPerformed
 
-    private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
+    private void switchButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_switchButtonActionPerformed
         apps = AppsManagement.addNXApps();
         addElements();
         apps = AppsManagement.addNXApps();
         addElements();
         updateVersionsFromGitHub(this::onVersionsLoaded);
 
-    }//GEN-LAST:event_jButton2ActionPerformed
+    }//GEN-LAST:event_switchButtonActionPerformed
 
-    private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
+    private void n3dsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_n3dsButtonActionPerformed
         // TODO add your handling code here:
-    }//GEN-LAST:event_jButton4ActionPerformed
+    }//GEN-LAST:event_n3dsButtonActionPerformed
 
     private void WiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WiiActionPerformed
         // TODO add your handling code here:
@@ -585,6 +593,10 @@ public class SwitchMenu extends javax.swing.JFrame {
             javax.swing.SwingUtilities.invokeLater(() -> {
                 downloadAll.setEnabled(true);
                 jButton1.setEnabled(true);
+                switchButton.setEnabled(true);
+                n3dsButton.setEnabled(true);
+                Wii.setEnabled(true);
+                WiiU.setEnabled(true);
                 reloadButton.setEnabled(true);
                 lblStatus.setText("Ready");
                 progressBar.setIndeterminate(false);
@@ -702,11 +714,11 @@ public class SwitchMenu extends javax.swing.JFrame {
     private javax.swing.JTable appTable;
     private javax.swing.JButton downloadAll;
     private javax.swing.JButton jButton1;
-    private javax.swing.JButton jButton2;
-    private javax.swing.JButton jButton4;
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblStatus;
+    private javax.swing.JButton n3dsButton;
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton reloadButton;
+    private javax.swing.JButton switchButton;
     // End of variables declaration//GEN-END:variables
 }
