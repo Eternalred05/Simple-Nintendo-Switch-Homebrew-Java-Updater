@@ -26,6 +26,20 @@ public class GitHubService {
         return s;
     }
 
+    public List<GHAsset> getReleaseAssets(String owner, String repo) {
+        List<GHAsset> assetts = null;
+        try {
+            GHRepository repository = github.getRepository(owner + "/" + repo);
+            GHRelease latestRelease = repository.getLatestRelease();
+            assetts = latestRelease.getAssets();
+        } catch (IOException e) {
+            System.err.println("Error obteniendo assets de " + owner + "/" + repo + ": " + e.getMessage());
+
+        }
+        return assetts;
+    }
+    // For tests because if the release is not a .zip it will not work properly
+
     public String getAssetDownloadUrl(String owner, String repo) {
         String s = null;
         try {
