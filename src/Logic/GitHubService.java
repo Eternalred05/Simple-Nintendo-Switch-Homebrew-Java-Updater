@@ -2,6 +2,7 @@ package Logic;
 
 import org.kohsuke.github.*;
 import java.io.IOException;
+import java.util.List;
 
 public class GitHubService {
 
@@ -9,19 +10,38 @@ public class GitHubService {
 
     public GitHubService() throws IOException {
 
-        this.github = GitHubBuilder.fromEnvironment().build();
+        this.github = new GitHubBuilder().build();
+
     }
 
     public String getLatestVersion(String owner, String repo) {
-        String release = null;
         try {
             GHRepository repository = github.getRepository(owner + "/" + repo);
             GHRelease latestRelease = repository.getLatestRelease();
-            release = latestRelease.getTagName();
+            return latestRelease.getTagName();
         } catch (IOException e) {
-            System.err.println("Error obteniendo versión de " + owner + "/" + repo + ": " + e.getMessage());
-
+            return "Error";
         }
-        return release;
+    }
+
+    public String getAssetDownloadUrl(String owner, String repo) {
+        try {
+            GHRepository repository = github.getRepository(owner + "/" + repo);
+            GHRelease latestRelease = repository.getLatestRelease();
+            List<GHAsset> assets = latestRelease.getAssets();
+
+            for (GHAsset asset : assets) {
+                if (asset.getName().toLowerCase().endsWith(".zip")) {
+                    return asset.getBrowserDownloadUrl();
+                }
+            }
+
+            if (!assets.isEmpty()) {
+                return assets.get(0).getBrowserDownloadUrl();
+            }
+            return null;
+        } catch (IOException e) {
+            return null;
+        }
     }
 }

@@ -1,8 +1,17 @@
 package Runner;
 
 import Logic.AppsManagement;
+import Logic.GitHubService;
 import Logic.NxApp;
 import java.awt.FontMetrics;
+import java.io.IOException;
+import java.io.InputStream;
+import java.net.HttpURLConnection;
+import java.net.URL;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
+import java.nio.file.StandardCopyOption;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
@@ -13,6 +22,7 @@ import javax.swing.table.TableColumn;
 public class MainMenu extends javax.swing.JFrame {
 
     ArrayList<NxApp> apps = AppsManagement.addApps();
+    private GitHubService gitHubService;
 
     public MainMenu() {
         initComponents();
@@ -21,10 +31,39 @@ public class MainMenu extends javax.swing.JFrame {
         setTitle("Nintendo Switch Homebrew Java Updater v0.0.1");
         configureTable();
         addElements();
+        try {
+            gitHubService = new GitHubService();
+        } catch (IOException e) {
+            JOptionPane.showMessageDialog(this, "Error while connecting to Github: " + e.getMessage(),
+                    "Warning", JOptionPane.WARNING_MESSAGE);
+        }
+    }
+
+    private void downloadFile(String fileURL, String outputPath) throws IOException {
+        URL url = new URL(fileURL);
+        HttpURLConnection httpConn = (HttpURLConnection) url.openConnection();
+        httpConn.setRequestMethod("GET");
+        httpConn.setConnectTimeout(30000);
+        httpConn.setReadTimeout(60000);
+        httpConn.setInstanceFollowRedirects(true);
+
+        Path outputFile = Paths.get(outputPath);
+        Path parentDir = outputFile.getParent();
+        if (parentDir != null && !Files.exists(parentDir)) {
+            Files.createDirectories(parentDir);
+            System.out.println("Folder Created: " + parentDir);
+        }
+
+        try (InputStream inputStream = httpConn.getInputStream()) {
+            Files.copy(inputStream, outputFile, StandardCopyOption.REPLACE_EXISTING);
+            System.out.println("File Created: " + outputFile.toAbsolutePath());
+        } finally {
+            httpConn.disconnect();
+        }
     }
 
     private void welcomeMessage() {
-        JOptionPane.showMessageDialog(null, "Select from the table the applications you wish to update.", "Welcome", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(null, "This Application was developed by EternalRed05, any sugerences can be made via github issues. Thanks for using!.", "Welcome", JOptionPane.INFORMATION_MESSAGE);
     }
 
     private void addElements() {
@@ -92,6 +131,9 @@ public class MainMenu extends javax.swing.JFrame {
         jButton1 = new javax.swing.JButton();
         jScrollPane1 = new javax.swing.JScrollPane();
         appTable = new javax.swing.JTable();
+        downloadAll = new javax.swing.JButton();
+        progressBar = new javax.swing.JProgressBar();
+        lblStatus = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -110,14 +152,31 @@ public class MainMenu extends javax.swing.JFrame {
         ));
         jScrollPane1.setViewportView(appTable);
 
+        downloadAll.setText("Download All Apps");
+        downloadAll.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                downloadAllActionPerformed(evt);
+            }
+        });
+
+        lblStatus.setText("Actual Status");
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
-                .addGap(429, 429, 429)
+                .addGap(137, 137, 137)
+                .addComponent(downloadAll, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(225, 225, 225)
+                .addComponent(lblStatus)
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 234, Short.MAX_VALUE)
                 .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap(445, Short.MAX_VALUE))
+                .addGap(53, 53, 53))
+            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
+                .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 525, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(210, 210, 210))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(41, 41, 41)
@@ -126,10 +185,16 @@ public class MainMenu extends javax.swing.JFrame {
         );
         layout.setVerticalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-            .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createSequentialGroup()
-                .addContainerGap(565, Short.MAX_VALUE)
-                .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
-                .addContainerGap())
+            .addGroup(layout.createSequentialGroup()
+                .addContainerGap(523, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                        .addComponent(downloadAll, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 42, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addComponent(lblStatus, javax.swing.GroupLayout.Alignment.TRAILING))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                .addComponent(progressBar, javax.swing.GroupLayout.PREFERRED_SIZE, 24, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGap(23, 23, 23))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(102, 102, 102)
@@ -139,6 +204,87 @@ public class MainMenu extends javax.swing.JFrame {
 
         pack();
     }// </editor-fold>//GEN-END:initComponents
+
+    private void downloadAllActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_downloadAllActionPerformed
+
+        downloadAll.setEnabled(false);
+        jButton1.setEnabled(false);
+        downloadAll.setText("Downloading...");
+
+        // progress bar config
+        progressBar.setValue(0);
+        progressBar.setMaximum(apps.size());
+        progressBar.setStringPainted(true);
+        lblStatus.setText("Starting Downloads...");
+
+        new Thread(() -> {
+            int successCount = 0;
+            StringBuilder errors = new StringBuilder();
+
+            for (int i = 0; i < apps.size(); i++) {
+                NxApp app = apps.get(i);
+                final int currentIndex = i + 1;
+
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    lblStatus.setText("Downloading " + app.getName() + " (" + currentIndex + "/" + apps.size() + ")");
+                });
+
+                String version = app.getVersion();
+                if (version == null || version.equals("Unknown") || version.equals("Error/No release")) {
+                    errors.append("• ").append(app.getName()).append(": The Version is not available\n");
+
+                    updateProgress(i + 1);
+                    continue;
+                }
+
+                try {
+                    String downloadUrl = gitHubService.getAssetDownloadUrl(app.getRepoOwner(), app.getRepoName());
+
+                    if (downloadUrl != null) {
+                        String fileName = app.getName().replaceAll("\\s+", "_") + "_" + version + ".zip";
+                        String outputPath = System.getProperty("user.home") + "/Downloads/NxAppDownloader/" + fileName;
+
+                        downloadFile(downloadUrl, outputPath);
+                        successCount++;
+                        System.out.println("Succesfull Download " + app.getName() + " stored in " + outputPath);
+                    } else {
+                        errors.append("• ").append(app.getName()).append(": The File couldn't be downloaded correctly, check your internet connection.\n");
+                    }
+                } catch (Exception e) {
+                    errors.append("• ").append(app.getName()).append(": ").append(e.getMessage()).append("\n");
+                    System.err.println("Error: " + e.getMessage());
+                    System.err.println("Error while downloading " + app.getName() + ": " + e.getMessage());
+                    e.printStackTrace();
+                }
+
+                updateProgress(i + 1);
+            }
+
+            final int finalSuccess = successCount;
+            final String finalErrors = errors.toString();
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                String message = "Downloads were completed.\n Success: " + finalSuccess + "\nFailed: " + (apps.size() - finalSuccess);
+                if (finalErrors.length() > 0) {
+                    message += "\n\nErrors:\n" + finalErrors;
+                }
+                JOptionPane.showMessageDialog(MainMenu.this, message, "Results",
+                        (finalSuccess == apps.size()) ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE);
+
+                downloadAll.setEnabled(true);
+                jButton1.setEnabled(true);
+                downloadAll.setText("Download All Apps");
+                lblStatus.setText("Succesfull");
+                progressBar.setValue(0);
+            });
+        }).start();
+    }
+
+    private void updateProgress(int value) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            progressBar.setValue(value);
+            progressBar.setString(value + "/" + apps.size());
+        });
+    }//GEN-LAST:event_downloadAllActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,7 +323,10 @@ public class MainMenu extends javax.swing.JFrame {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTable appTable;
+    private javax.swing.JButton downloadAll;
     private javax.swing.JButton jButton1;
     private javax.swing.JScrollPane jScrollPane1;
+    private javax.swing.JLabel lblStatus;
+    private javax.swing.JProgressBar progressBar;
     // End of variables declaration//GEN-END:variables
 }
