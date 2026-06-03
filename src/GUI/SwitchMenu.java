@@ -31,7 +31,7 @@ public class SwitchMenu extends javax.swing.JFrame {
         initComponents();
         // welcomeMessage();
         setLocationRelativeTo(null);
-        setTitle("Nintendo Homebrew Java Updater v1.1.0");
+        setTitle("Nintendo Homebrew Java Updater v1.2.0");
         configureTable();
         try {
             gitHubService = new GitHubService();
@@ -238,6 +238,7 @@ public class SwitchMenu extends javax.swing.JFrame {
         Wii = new javax.swing.JButton();
         WiiU = new javax.swing.JButton();
         reloadButton = new javax.swing.JButton();
+        vWii = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -305,6 +306,13 @@ public class SwitchMenu extends javax.swing.JFrame {
             }
         });
 
+        vWii.setText("vWii");
+        vWii.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                vWiiActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -328,8 +336,10 @@ public class SwitchMenu extends javax.swing.JFrame {
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(Wii)
-                        .addGap(27, 27, 27)
-                        .addComponent(WiiU)))
+                        .addGap(18, 18, 18)
+                        .addComponent(WiiU)
+                        .addGap(20, 20, 20)
+                        .addComponent(vWii)))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -350,7 +360,8 @@ public class SwitchMenu extends javax.swing.JFrame {
                     .addComponent(Wii)
                     .addComponent(switchButton)
                     .addComponent(WiiU)
-                    .addComponent(reloadButton))
+                    .addComponent(reloadButton)
+                    .addComponent(vWii))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 431, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -570,7 +581,9 @@ public class SwitchMenu extends javax.swing.JFrame {
     }//GEN-LAST:event_switchButtonActionPerformed
 
     private void n3dsButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_n3dsButtonActionPerformed
-        // TODO add your handling code here:
+        apps = AppsManagement.addCTRApps();
+        addElements();
+        updateVersionsFromGitHub(this::onVersionsLoaded);
     }//GEN-LAST:event_n3dsButtonActionPerformed
 
     private void WiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WiiActionPerformed
@@ -605,6 +618,10 @@ public class SwitchMenu extends javax.swing.JFrame {
             });
         });
     }//GEN-LAST:event_reloadButtonActionPerformed
+
+    private void vWiiActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_vWiiActionPerformed
+        // TODO add your handling code here:
+    }//GEN-LAST:event_vWiiActionPerformed
 
     private void startDownloadSelected(java.util.ArrayList<NxApp> selectedApps, int totalAssets) {
         new Thread(() -> {
@@ -720,5 +737,6 @@ public class SwitchMenu extends javax.swing.JFrame {
     private javax.swing.JProgressBar progressBar;
     private javax.swing.JButton reloadButton;
     private javax.swing.JButton switchButton;
+    private javax.swing.JButton vWii;
     // End of variables declaration//GEN-END:variables
 }
