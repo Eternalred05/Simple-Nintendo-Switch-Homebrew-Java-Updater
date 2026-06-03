@@ -12,6 +12,6 @@ For building/running this program at least is required the following dependencie
 - commons-lang3 3.18/0 and commons-io 2.22.0.
 In case of building by your own, you can provide a github token to improve loading versions and downloading files speed. *DO NOT SHARE THIS TOKEN*
 # Thanks
-Many thanks to every developer that made all of these amazing homebrew apps for nintendo switch, and thanks to the developers of the aforementioned dependencies for their work
+Many thanks to every developer that made all of these amazing homebrew apps for each of the included consoles, and thanks to the developers of the aforementioned dependencies for their work
 # Why use this instead of other apps like the hb-appstore or insert any other app like this?
 This app is made as a hobby and to learn to connect github and https requests to java, and also for personal, use, however if anyone needs this application they are free to use it or modify it. Also because i like to keep my apps stored for any case, any kind of feedback or help is always welcome.
