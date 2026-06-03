@@ -31,7 +31,8 @@ public class SwitchMenu extends javax.swing.JFrame {
         initComponents();
         // welcomeMessage();
         setLocationRelativeTo(null);
-        setTitle("Nintendo Homebrew Java Updater v1.3.1");
+        setTitle("Nintendo Homebrew Java Updater v1.3.3");
+        setResizable(false);
         configureTable();
         try {
             gitHubService = new GitHubService();
