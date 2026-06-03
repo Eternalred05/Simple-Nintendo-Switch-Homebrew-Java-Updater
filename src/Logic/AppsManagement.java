@@ -36,6 +36,7 @@ public class AppsManagement {
         apps.add(new NxApp("goldleaf", "https://github.com/xortroll/goldleaf"));
         apps.add(new NxApp("nso-icon-tool", "https://github.com/dslatt/nso-icon-tool"));
         apps.add(new NxApp("Horizon-OC", "https://github.com/Horizon-OC/Horizon-OC"));
+        apps.add(new NxApp("Checkpoint", "https://github.com/BernardoGiordano/Checkpoint"));
 
         return apps;
     }
@@ -91,13 +92,39 @@ public class AppsManagement {
         return apps;
     }
 
-    public static ArrayList<NxApp> addCTRpps() {
+    public static ArrayList<NxApp> addCTRApps() {
         ArrayList<NxApp> apps = new ArrayList<>();
-        apps.add(new NxApp("", ""));
+        apps.add(new NxApp("Checkpoint", "https://github.com/BernardoGiordano/Checkpoint"));
+        apps.add(new NxApp("Luma3DS", "https://github.com/LumaTeam/Luma3DS"));
+        apps.add(new NxApp("BootNTR", "https://github.com/Nanquitas/BootNTR"));
+        apps.add(new NxApp("new-hbmenu", "https://github.com/fincs/new-hbmenu"));
+        apps.add(new NxApp("boot9strap", "https://github.com/SciresM/boot9strap"));
+        apps.add(new NxApp("SafeB9SInstaller", "https://github.com/d0k3/SafeB9SInstaller"));
+        apps.add(new NxApp("nds-bootstrap", "https://github.com/ahezard/nds-bootstrap"));
+        apps.add(new NxApp("rehid", "https://github.com/hax0kartik/rehid"));
+        apps.add(new NxApp("wumiibo", "https://github.com/hax0kartik/wumiibo"));
+        apps.add(new NxApp("Anemone3DS", "https://github.com/astronautlevel2/Anemone3DS"));
+        apps.add(new NxApp("FBI-Reloaded", "https://github.com/TheRealZora/FBI-Reloaded"));
+        apps.add(new NxApp("GodMode9", "https://github.com/d0k3/GodMode9"));
+        apps.add(new NxApp("ftpd", "https://github.com/mtheall/ftpd"));
+        apps.add(new NxApp("JKSM", "https://github.com/J-D-K/JKSM"));
+        apps.add(new NxApp("PKSM", "https://github.com/FlagBrew/PKSM"));
+        apps.add(new NxApp("playcoin", "https://github.com/MrCheeze/playcoin"));
+        apps.add(new NxApp("TWiLightMenu", "https://github.com/DS-Homebrew/TWiLightMenu"));
+        apps.add(new NxApp("3DSident", "https://github.com/joel16/3DSident"));
+
         return apps;
     }
 
     public static ArrayList<NxApp> addDolphinApps() {
+        ArrayList<NxApp> apps = new ArrayList<>();
+        apps.add(new NxApp("", ""));
+        apps.add(new NxApp("", ""));
+        apps.add(new NxApp("", ""));
+        return apps;
+    }
+
+    public static ArrayList<NxApp> addvWiiApps() {
         ArrayList<NxApp> apps = new ArrayList<>();
         apps.add(new NxApp("", ""));
         return apps;
