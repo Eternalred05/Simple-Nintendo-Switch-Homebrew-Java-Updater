@@ -138,6 +138,11 @@ public class MainMenu extends javax.swing.JFrame {
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
         jButton1.setText("Download Selected");
+        jButton1.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                jButton1ActionPerformed(evt);
+            }
+        });
 
         appTable.setModel(new javax.swing.table.DefaultTableModel(
             new Object [][] {
@@ -263,7 +268,7 @@ public class MainMenu extends javax.swing.JFrame {
             final int finalSuccess = successCount;
             final String finalErrors = errors.toString();
             javax.swing.SwingUtilities.invokeLater(() -> {
-                String message = "Downloads were completed.\n Success: " + finalSuccess + "\nFailed: " + (apps.size() - finalSuccess);
+                String message = "Downloads were completed.\nSuccess: " + finalSuccess + "\nFailed: " + (apps.size() - finalSuccess);
                 if (finalErrors.length() > 0) {
                     message += "\n\nErrors:\n" + finalErrors;
                 }
@@ -277,6 +282,12 @@ public class MainMenu extends javax.swing.JFrame {
                 progressBar.setValue(0);
             });
         }).start();
+    }//GEN-LAST:event_downloadAllActionPerformed
+    private void updateProgressSelected(int current, int total) {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+            progressBar.setValue(current);
+            progressBar.setString(current + "/" + total);
+        });
     }
 
     private void updateProgress(int value) {
@@ -284,7 +295,93 @@ public class MainMenu extends javax.swing.JFrame {
             progressBar.setValue(value);
             progressBar.setString(value + "/" + apps.size());
         });
-    }//GEN-LAST:event_downloadAllActionPerformed
+    }
+    private void jButton1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton1ActionPerformed
+        int[] selectedRows = appTable.getSelectedRows();
+
+        if (selectedRows.length == 0) {
+            JOptionPane.showMessageDialog(this,
+                    "Please select at least one application from the table.",
+                    "No selection",
+                    JOptionPane.WARNING_MESSAGE);
+
+        } else {
+            ArrayList<NxApp> selectedApps = new ArrayList<>();
+            for (int row : selectedRows) {
+                selectedApps.add(apps.get(row));
+            }
+
+            downloadAll.setEnabled(false);
+            jButton1.setEnabled(false);
+            jButton1.setText("Downloading selected...");
+
+            progressBar.setValue(0);
+            progressBar.setMaximum(selectedRows.length);
+            progressBar.setStringPainted(true);
+            lblStatus.setText("Starting downloads for selected apps...");
+
+            new Thread(() -> {
+                int successCount = 0;
+                StringBuilder errors = new StringBuilder();
+
+                for (int i = 0; i < selectedApps.size(); i++) {
+                    NxApp app = selectedApps.get(i);
+                    final int currentIndex = i + 1;
+
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        lblStatus.setText("Downloading " + app.getName() + " (" + currentIndex + "/" + selectedApps.size() + ")");
+                    });
+
+                    String version = app.getVersion();
+                    if (version == null || version.equals("Unknown") || version.equals("Error/No release")) {
+                        errors.append("• ").append(app.getName()).append(": Version not available\n");
+                        updateProgressSelected(currentIndex, selectedApps.size());
+                        continue;
+                    }
+
+                    try {
+                        String downloadUrl = gitHubService.getAssetDownloadUrl(app.getRepoOwner(), app.getRepoName());
+                        if (downloadUrl != null) {
+
+                            String fileName = app.getName().replaceAll("\\s+", "_") + "_" + version + ".zip";
+                            String outputPath = System.getProperty("user.home") + "/Downloads/NxAppDownloader/" + fileName;
+
+                            downloadFile(downloadUrl, outputPath);
+                            successCount++;
+                            System.out.println("Successfully downloaded " + app.getName() + " to " + outputPath);
+                        } else {
+                            errors.append("• ").append(app.getName()).append(": No asset (ZIP) found in the release\n");
+                        }
+                    } catch (Exception e) {
+                        errors.append("• ").append(app.getName()).append(": ").append(e.getMessage()).append("\n");
+                        System.err.println("Error downloading " + app.getName() + ": " + e.getMessage());
+                        e.printStackTrace();
+                    }
+
+                    updateProgressSelected(currentIndex, selectedApps.size());
+                }
+
+                final int finalSuccess = successCount;
+                final String finalErrors = errors.toString();
+                final int totalSelected = selectedApps.size();
+
+                javax.swing.SwingUtilities.invokeLater(() -> {
+                    String message = "Download completed for selected apps.\nSuccess: " + finalSuccess + "\nFailed: " + (totalSelected - finalSuccess);
+                    if (finalErrors.length() > 0) {
+                        message += "\n\nErrors:\n" + finalErrors;
+                    }
+                    JOptionPane.showMessageDialog(MainMenu.this, message, "Result (Selected)",
+                            (finalSuccess == totalSelected) ? JOptionPane.INFORMATION_MESSAGE : JOptionPane.WARNING_MESSAGE);
+
+                    downloadAll.setEnabled(true);
+                    jButton1.setEnabled(true);
+                    jButton1.setText("Download Selected");
+                    lblStatus.setText("Ready");
+                    progressBar.setValue(0);
+                });
+            }).start();
+        }
+    }//GEN-LAST:event_jButton1ActionPerformed
 
     /**
      * @param args the command line arguments

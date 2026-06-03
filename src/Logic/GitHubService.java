@@ -15,16 +15,19 @@ public class GitHubService {
     }
 
     public String getLatestVersion(String owner, String repo) {
+        String s = null;
         try {
             GHRepository repository = github.getRepository(owner + "/" + repo);
             GHRelease latestRelease = repository.getLatestRelease();
-            return latestRelease.getTagName();
+            s = latestRelease.getTagName();
         } catch (IOException e) {
-            return "Error";
+            s = "Error";
         }
+        return s;
     }
 
     public String getAssetDownloadUrl(String owner, String repo) {
+        String s = null;
         try {
             GHRepository repository = github.getRepository(owner + "/" + repo);
             GHRelease latestRelease = repository.getLatestRelease();
@@ -32,16 +35,16 @@ public class GitHubService {
 
             for (GHAsset asset : assets) {
                 if (asset.getName().toLowerCase().endsWith(".zip")) {
-                    return asset.getBrowserDownloadUrl();
+                    s = asset.getBrowserDownloadUrl();
                 }
             }
 
             if (!assets.isEmpty()) {
-                return assets.get(0).getBrowserDownloadUrl();
+                s = assets.get(0).getBrowserDownloadUrl();
             }
-            return null;
         } catch (IOException e) {
-            return null;
+
         }
+        return s;
     }
 }
