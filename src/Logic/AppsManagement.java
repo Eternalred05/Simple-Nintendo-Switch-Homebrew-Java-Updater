@@ -6,6 +6,7 @@ public class AppsManagement {
 
     public static ArrayList<NxApp> addNXApps() {
         ArrayList<NxApp> apps = new ArrayList<>();
+        // Credits to Impeeza, SciresM, hexkyz, ppantorski, masagrator,exelix11,CTCaer,and many others
         apps.add(new NxApp("Atmosphere", "https://github.com/Atmosphere-NX/Atmosphere"));
         apps.add(new NxApp("Hekate", "https://github.com/CTCaer/hekate"));
         apps.add(new NxApp("MissionControl", "https://github.com/ndeadly/MissionControl"));
@@ -26,6 +27,79 @@ public class AppsManagement {
         apps.add(new NxApp("SwitchThemeInjector", "https://github.com/exelix11/SwitchThemeInjector"));
         apps.add(new NxApp("themezer-nx", "https://github.com/suchmememanyskill/themezer-nx"));
         apps.add(new NxApp("Switch_90DNS_tester", "https://github.com/meganukebmp/Switch_90DNS_tester"));
+        apps.add(new NxApp("nx-locale-switcher", "https://github.com/HamletDuFromage/nx-locale-switcher"));
+        apps.add(new NxApp("nxdumptool", "https://github.com/DarkMatterCore/nxdumptool"));
+        apps.add(new NxApp("TegraExplorer", "https://github.com/suchmememanyskill/TegraExplorer"));
+        apps.add(new NxApp("nxmp", "https://github.com/proconsule/nxmp"));
+        apps.add(new NxApp("Fizeau", "https://github.com/ppkantorski/Fizeau"));
+        apps.add(new NxApp("EdiZon-Overlay", "https://github.com/ppkantorski/EdiZon-Overlay"));
+        apps.add(new NxApp("goldleaf", "https://github.com/xortroll/goldleaf"));
+        apps.add(new NxApp("nso-icon-tool", "https://github.com/dslatt/nso-icon-tool"));
+        apps.add(new NxApp("Horizon-OC", "https://github.com/Horizon-OC/Horizon-OC"));
+
+        return apps;
+    }
+
+    public static ArrayList<NxApp> addCafeApps() {
+        ArrayList<NxApp> apps = new ArrayList<>();
+        // by Maschell
+        apps.add(new NxApp("Aroma", "https://github.com/wiiu-env/Aroma"));
+        apps.add(new NxApp("Tiramisu", "https://github.com/wiiu-env/Tiramisu"));
+        apps.add(new NxApp("Padcon-Plugin-Mod", "https://github.com/Maschell/Padcon-Plugin-Mod"));
+        apps.add(new NxApp("DRC-Sensorbar", "https://github.com/Maschell/DRC-Sensorbar"));
+        apps.add(new NxApp("EnvironmentLoader", "https://github.com/wiiu-env/EnvironmentLoader"));
+        apps.add(new NxApp("sdcafiine_plugin", "https://github.com/wiiu-env/sdcafiine_plugin"));
+        apps.add(new NxApp("SwipSwapMe", "https://github.com/wiiu-env/SwipSwapMe"));
+        apps.add(new NxApp("wudd", "https://github.com/wiiu-env/wudd"));
+        apps.add(new NxApp("PayloadLoaderInstaller", "https://github.com/wiiu-env/PayloadLoaderInstaller"));
+        apps.add(new NxApp("AromaUpdater", "https://github.com/wiiu-env/AromaUpdater"));
+
+        // by GaryOderNicht
+        apps.add(new NxApp("Bloopair", "https://github.com/GaryOderNichts/Bloopair"));
+        apps.add(new NxApp("evwii", "https://github.com/GaryOderNichts/evwii"));
+        apps.add(new NxApp("re_nfpii", "https://github.com/GaryOderNichts/re_nfpii"));
+        apps.add(new NxApp("WiiUIdent", "https://github.com/GaryOderNichts/WiiUIdent"));
+        apps.add(new NxApp("GiveMiiYouTube", "https://github.com/PretendoNetwork/GiveMiiYouTube"));
+
+        // StroopWafel and Exploits (Credits to jan-hofmeir,dimok,rw,dkosmary and the rest of the wii u scene)
+        apps.add(new NxApp("minute_minute", "https://github.com/StroopwafelCFW/minute_minute"));
+        apps.add(new NxApp("isfshax", "https://github.com/isfshax/isfshax"));
+        apps.add(new NxApp("isfshax_installer", "https://github.com/isfshax/isfshax_installer"));
+        apps.add(new NxApp("haxcopy", " https://github.com/isfshax/haxcopy"));
+        apps.add(new NxApp("wafel_isfshax_patch", "https://github.com/isfshax/wafel_isfshax_patch"));
+        apps.add(new NxApp("JsTypeHax", "https://github.com/wiiu-env/JsTypeHax"));
+        apps.add(new NxApp("stroopwafel", "https://github.com/StroopwafelCFW/stroopwafel"));
+        apps.add(new NxApp("wafel_usb_mlc", "https://github.com/StroopwafelCFW/wafel_usb_mlc"));
+        apps.add(new NxApp("wafel_sd_usb", "https://github.com/StroopwafelCFW/wafel_sd_usb"));
+        apps.add(new NxApp("wafel_noinit_tablet", "https://github.com/StroopwafelCFW/wafel_noinit_tablet"));
+        apps.add(new NxApp("wafel_usb_partition", "https://github.com/StroopwafelCFW/wafel_usb_partition"));
+        apps.add(new NxApp("wafel_unlimit_mlc", "https://github.com/StroopwafelCFW/wafel_unlimit_mlc"));
+        apps.add(new NxApp("wup-installer-gx2", "https://github.com/Fangal-Airbag/wup-installer-gx2"));
+        apps.add(new NxApp("Better-Settings", "https://github.com/Fangal-Airbag/Better-Settings"));
+        apps.add(new NxApp("WiiUReboot", "https://github.com/Fangal-Airbag/WiiUReboot"));
+        apps.add(new NxApp("UTheme", "https://github.com/Fangal-Airbag/UTheme"));
+        apps.add(new NxApp("Papaya-HUD", "https://github.com/dkosmari/Papaya-HUD"));
+        apps.add(new NxApp("Turbiine", "https://github.com/dkosmari/Turbiine"));
+        apps.add(new NxApp("StyleMiiU-Plugin", "https://github.com/dkosmari/StyleMiiU-Plugin"));
+        apps.add(new NxApp("Network-Switcher", "https://github.com/dkosmari/Network-Switcher"));
+        apps.add(new NxApp("ftpiiu_plugin", "https://github.com/dkosmari/ftpiiu_plugin"));
+        apps.add(new NxApp("GamepadAutoStandby", "https://github.com/Lynx64/GamepadAutoStandby"));
+        apps.add(new NxApp("SigpatchesModuleWiiU", "https://github.com/marco-calautti/SigpatchesModuleWiiU"));
+        apps.add(new NxApp("WiiUCamera", "https://github.com/ClaudiWolf2056/WiiUCamera"));
+        apps.add(new NxApp("savemii", "https://github.com/w3irDv/savemii"));
+        apps.add(new NxApp("cafemp", "https://github.com/whateveritwas/cafemp"));
+        return apps;
+    }
+
+    public static ArrayList<NxApp> addCTRpps() {
+        ArrayList<NxApp> apps = new ArrayList<>();
+        apps.add(new NxApp("", ""));
+        return apps;
+    }
+
+    public static ArrayList<NxApp> addDolphinApps() {
+        ArrayList<NxApp> apps = new ArrayList<>();
+        apps.add(new NxApp("", ""));
         return apps;
     }
 
