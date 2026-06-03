@@ -10,7 +10,7 @@ For building/running this program at least is required the following dependencie
 - Jackson Core, Annotations, databinds and datatypes 1.28.3 fro JSON works, be aware that usign other versions may cause version dependant errors
 - github-api for connecting to github at least 1.327 since 2.0 is a release candidate (rc), this version was using instead
 - commons-lang3 3.18/0 and commons-io 2.22.0.
-In case of building by your own, you can provide a github token to improve loading versions and downloading files speed. ** DO NOT SHARE THIS TOKEN **
+In case of building by your own, you can provide a github token to improve loading versions and downloading files speed. *DO NOT SHARE THIS TOKEN*
 # Thanks
 Many thanks to every developer that made all of these amazing homebrew apps for nintendo switch, and thanks to the developers of the aforementioned dependencies for their work
 # Why use this instead of other apps like the hb-appstore or insert any other app like this?
