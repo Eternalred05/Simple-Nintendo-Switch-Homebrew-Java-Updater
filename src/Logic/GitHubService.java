@@ -9,9 +9,10 @@ public class GitHubService {
     private final GitHub github;
 
     public GitHubService() throws IOException {
+        //  this.github = new GitHubBuilder().withOAuthToken("Place Your Own Token Here").build();
 
+        // In case you want to use a Token comment this below and quit the up comment 
         this.github = new GitHubBuilder().build();
-
     }
 
     public String getLatestVersion(String owner, String repo) {

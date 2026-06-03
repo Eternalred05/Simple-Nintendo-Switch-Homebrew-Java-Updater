@@ -1,7 +1,5 @@
 package Logic;
 
-import java.io.IOException;
-
 public class NxApp {
 
     private String name;
@@ -11,28 +9,18 @@ public class NxApp {
     private String repoName;
 
     public NxApp(String name, String url) {
-
         this.name = name;
         this.url = url;
+        this.version = "Unknown";
         String[] info = extractRepoInfo(url);
         if (info != null) {
             this.repoOwner = info[0];
             this.repoName = info[1];
-            try {
-                GitHubService g = new GitHubService();
-                String v = g.getLatestVersion(info[0], info[1]);
-                this.version = (v != null) ? v : "Unknown";
-            } catch (IOException e) {
-                this.version = "Unknown";
-                System.out.println("GitHub error: " + e.getMessage());
-            }
         }
     }
 
     public static String[] extractRepoInfo(String githubUrl) {
-
-        String[] s = null;
-
+        String s[] = null;
         String cleanUrl = githubUrl.replaceAll("https?://github.com/", "");
         if (cleanUrl.endsWith("/")) {
             cleanUrl = cleanUrl.substring(0, cleanUrl.length() - 1);
@@ -72,8 +60,16 @@ public class NxApp {
         return repoOwner;
     }
 
+    public void setRepoOwner(String repoOwner) {
+        this.repoOwner = repoOwner;
+    }
+
     public String getRepoName() {
         return repoName;
+    }
+
+    public void setRepoName(String repoName) {
+        this.repoName = repoName;
     }
 
 }

@@ -3,7 +3,6 @@ package GUI;
 import Logic.AppsManagement;
 import Logic.GitHubService;
 import Logic.NxApp;
-import java.awt.FontMetrics;
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.HttpURLConnection;
@@ -18,21 +17,21 @@ import java.util.List;
 import javax.swing.JOptionPane;
 import javax.swing.SwingWorker;
 import javax.swing.table.DefaultTableModel;
-import javax.swing.table.JTableHeader;
-import javax.swing.table.TableColumnModel;
-import javax.swing.table.TableColumn;
+
 import org.kohsuke.github.GHAsset;
 
 public class SwitchMenu extends javax.swing.JFrame {
 
     ArrayList<NxApp> apps = new ArrayList<>();
     private GitHubService gitHubService;
+    private int pendingVersionTasks = 0;
+    private boolean isLoadingVersions = false;
 
     public SwitchMenu() {
         initComponents();
-        //  welcomeMessage();
+        // welcomeMessage();
         setLocationRelativeTo(null);
-        setTitle("Nintendo Homebrew Java Updater v1.0.3");
+        setTitle("Nintendo Homebrew Java Updater v1.0.4");
         configureTable();
         try {
             gitHubService = new GitHubService();
@@ -102,7 +101,6 @@ public class SwitchMenu extends javax.swing.JFrame {
             Object[] o = new Object[]{n.getName(), n.getRepoOwner(), n.getUrl(), n.getVersion()};
             model.addRow(o);
         }
-        autoResizeColumns();
 
     }
 
@@ -116,36 +114,108 @@ public class SwitchMenu extends javax.swing.JFrame {
         };
         appTable.setModel(model);
         appTable.getTableHeader().setReorderingAllowed(false);
+        appTable.getColumnModel().getColumn(0).setPreferredWidth(150);
+        appTable.getColumnModel().getColumn(1).setPreferredWidth(120);
+        appTable.getColumnModel().getColumn(2).setPreferredWidth(300);
+        appTable.getColumnModel().getColumn(3).setPreferredWidth(100);
 
     }
 
-    private void autoResizeColumns() {
-        JTableHeader header = appTable.getTableHeader();
-        TableColumnModel columnModel = appTable.getColumnModel();
-        FontMetrics headerFontMetrics = header.getFontMetrics(header.getFont());
-        FontMetrics cellFontMetrics = appTable.getFontMetrics(appTable.getFont());
+    private void updateVersionsFromGitHub(Runnable onComplete) {
 
-        for (int col = 0; col < appTable.getColumnCount(); col++) {
-            TableColumn column = columnModel.getColumn(col);
-            String headerValue = (String) column.getHeaderValue();
-            int headerWidth = headerFontMetrics.stringWidth(headerValue) + 12;
+        if (isLoadingVersions) {
+            System.out.println("Already loading versions, ignoring request.");
+            return;
+        }
+        if (apps.isEmpty()) {
+            if (onComplete != null) {
+                onComplete.run();
+            }
+            return;
+        }
 
-            int maxCellWidth = headerWidth;
-            for (int row = 0; row < appTable.getRowCount(); row++) {
-                Object value = appTable.getValueAt(row, col);
-                if (value != null) {
-                    String text = value.toString();
-                    int cellWidth = cellFontMetrics.stringWidth(text) + 12;
-                    if (cellWidth > maxCellWidth) {
-                        maxCellWidth = cellWidth;
+        isLoadingVersions = true;
+        pendingVersionTasks = apps.size();
+
+        downloadAll.setEnabled(false);
+        jButton1.setEnabled(false);
+        if (reloadButton != null) {
+            reloadButton.setEnabled(false);
+        }
+
+        jButton2.setEnabled(false);
+        jButton4.setEnabled(false);
+        Wii.setEnabled(false);
+        WiiU.setEnabled(false);
+
+        lblStatus.setText("Loading latest versions...");
+        progressBar.setIndeterminate(true);
+
+        DefaultTableModel model = (DefaultTableModel) appTable.getModel();
+
+        for (int i = 0; i < apps.size(); i++) {
+            final int row = i;
+            final NxApp app = apps.get(i);
+
+            new SwingWorker<Void, Void>() {
+                private String latestVersion;
+
+                @Override
+                protected Void doInBackground() {
+                    latestVersion = gitHubService.getLatestVersion(app.getRepoOwner(), app.getRepoName());
+                    return null;
+                }
+
+                @Override
+                protected void done() {
+
+                    if (latestVersion != null && !latestVersion.equals("Error")) {
+                        app.setVersion(latestVersion);
+                        model.setValueAt(latestVersion, row, 3);
+                    } else {
+                        model.setValueAt("Error", row, 3);
+                    }
+
+                    pendingVersionTasks--;
+                    javax.swing.SwingUtilities.invokeLater(() -> {
+                        if (pendingVersionTasks > 0) {
+                            lblStatus.setText("Loading versions... (" + pendingVersionTasks + " remaining)");
+                        }
+                    });
+
+                    if (pendingVersionTasks == 0) {
+                        isLoadingVersions = false;
+                        if (onComplete != null) {
+                            onComplete.run();
+                        }
                     }
                 }
-            }
-
-            column.setPreferredWidth(maxCellWidth);
-            column.setMinWidth(maxCellWidth);
-
+            }.execute();
         }
+    }
+
+    private void onVersionsLoaded() {
+        javax.swing.SwingUtilities.invokeLater(() -> {
+
+            downloadAll.setEnabled(true);
+            jButton1.setEnabled(true);
+            if (reloadButton != null) {
+                reloadButton.setEnabled(true);
+            }
+            jButton2.setEnabled(true);
+            jButton4.setEnabled(true);
+            Wii.setEnabled(true);
+            WiiU.setEnabled(true);
+
+            lblStatus.setText("Ready");
+            progressBar.setIndeterminate(false);
+            progressBar.setValue(0);
+
+            JOptionPane.showMessageDialog(SwitchMenu.this,
+                    "All versions have been updated.",
+                    "Information",
+                    JOptionPane.INFORMATION_MESSAGE);
+        });
     }
 
     /**
@@ -167,6 +237,7 @@ public class SwitchMenu extends javax.swing.JFrame {
         jButton4 = new javax.swing.JButton();
         Wii = new javax.swing.JButton();
         WiiU = new javax.swing.JButton();
+        reloadButton = new javax.swing.JButton();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -227,6 +298,13 @@ public class SwitchMenu extends javax.swing.JFrame {
             }
         });
 
+        reloadButton.setText("Reload Latest Versions");
+        reloadButton.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                reloadButtonActionPerformed(evt);
+            }
+        });
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
@@ -246,16 +324,17 @@ public class SwitchMenu extends javax.swing.JFrame {
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(layout.createSequentialGroup()
                         .addGap(204, 204, 204)
-                        .addComponent(lblStatus)
-                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
-                        .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(53, 53, 53))
+                        .addComponent(lblStatus))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(27, 27, 27)
                         .addComponent(Wii)
                         .addGap(27, 27, 27)
-                        .addComponent(WiiU)
-                        .addContainerGap(javax.swing.GroupLayout.DEFAULT_SIZE, Short.MAX_VALUE))))
+                        .addComponent(WiiU)))
+                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 255, Short.MAX_VALUE)
+                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addComponent(jButton1, javax.swing.GroupLayout.PREFERRED_SIZE, 160, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(reloadButton))
+                .addGap(53, 53, 53))
             .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                 .addGroup(layout.createSequentialGroup()
                     .addGap(41, 41, 41)
@@ -270,7 +349,8 @@ public class SwitchMenu extends javax.swing.JFrame {
                     .addComponent(jButton4)
                     .addComponent(Wii)
                     .addComponent(jButton2)
-                    .addComponent(WiiU))
+                    .addComponent(WiiU)
+                    .addComponent(reloadButton))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 431, Short.MAX_VALUE)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
                     .addGroup(javax.swing.GroupLayout.Alignment.TRAILING, layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
@@ -477,7 +557,10 @@ public class SwitchMenu extends javax.swing.JFrame {
     private void jButton2ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton2ActionPerformed
         apps = AppsManagement.addNXApps();
         addElements();
-     
+        apps = AppsManagement.addNXApps();
+        addElements();
+        updateVersionsFromGitHub(this::onVersionsLoaded);
+
     }//GEN-LAST:event_jButton2ActionPerformed
 
     private void jButton4ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jButton4ActionPerformed
@@ -491,6 +574,25 @@ public class SwitchMenu extends javax.swing.JFrame {
     private void WiiUActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_WiiUActionPerformed
         // TODO add your handling code here:
     }//GEN-LAST:event_WiiUActionPerformed
+
+    private void reloadButtonActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_reloadButtonActionPerformed
+        if (isLoadingVersions) {
+            JOptionPane.showMessageDialog(this, "Already loading versions, please wait.", "Busy", JOptionPane.INFORMATION_MESSAGE);
+            return;
+        }
+
+        updateVersionsFromGitHub(() -> {
+            javax.swing.SwingUtilities.invokeLater(() -> {
+                downloadAll.setEnabled(true);
+                jButton1.setEnabled(true);
+                reloadButton.setEnabled(true);
+                lblStatus.setText("Ready");
+                progressBar.setIndeterminate(false);
+                progressBar.setValue(0);
+                JOptionPane.showMessageDialog(this, "Versions reloaded successfully.", "Done", JOptionPane.INFORMATION_MESSAGE);
+            });
+        });
+    }//GEN-LAST:event_reloadButtonActionPerformed
 
     private void startDownloadSelected(java.util.ArrayList<NxApp> selectedApps, int totalAssets) {
         new Thread(() -> {
@@ -605,5 +707,6 @@ public class SwitchMenu extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JLabel lblStatus;
     private javax.swing.JProgressBar progressBar;
+    private javax.swing.JButton reloadButton;
     // End of variables declaration//GEN-END:variables
 }
