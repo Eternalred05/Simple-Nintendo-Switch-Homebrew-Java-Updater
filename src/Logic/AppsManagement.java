@@ -37,6 +37,10 @@ public class AppsManagement {
         apps.add(new NxApp("nso-icon-tool", "https://github.com/dslatt/nso-icon-tool"));
         apps.add(new NxApp("Horizon-OC", "https://github.com/Horizon-OC/Horizon-OC"));
         apps.add(new NxApp("Checkpoint", "https://github.com/BernardoGiordano/Checkpoint"));
+        apps.add(new NxApp("sysHaze", "https://github.com/masagrator/sysHaze"));
+        apps.add(new NxApp("HOC-Toolkit", "https://github.com/ppkantorski/HOC-Toolkit"));
+        apps.add(new NxApp("Status-Monitor-Deux", "https://github.com/masagrator/Status-Monitor-Deux"));
+        
 
         return apps;
     }
